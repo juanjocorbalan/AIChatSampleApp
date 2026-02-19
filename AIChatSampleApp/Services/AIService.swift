@@ -15,7 +15,11 @@ enum AIServiceError: Error {
     case apiError(String)
 }
 
-final class AIService: Sendable {
+protocol AIServiceProtocol: Sendable {
+    func sendChatMessage(_ message: String, model: AIModel) async throws -> String
+}
+
+final class AIService: AIServiceProtocol {
     private let apiKey: String
     private let baseURL = "https://openrouter.ai/api/v1"
 

@@ -5,9 +5,9 @@ A simple iOS app that demonstrates integration with various AI models through Op
 ## Features
 
 - Chat with multiple AI models including:
-  - Llama
-  - Mistral
-  - DeepSeek
+  - Llama 4
+  - Nemotron Nano
+  - Gemma 3
 
 ## Requirements
 

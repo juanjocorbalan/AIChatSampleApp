@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct AIChatView: View {
-    @StateObject private var viewModel: AIChatViewModel
+    @State private var viewModel: AIChatViewModel
 
-    init() {
-        let aiService = AIService(apiKey: Config.apiKey)
-        _viewModel = StateObject(wrappedValue: AIChatViewModel(aiService: aiService))
+    init(aiService: any AIServiceProtocol = AIService(apiKey: Config.apiKey)) {
+        _viewModel = State(wrappedValue: AIChatViewModel(aiService: aiService))
     }
 
     var body: some View {
@@ -39,13 +38,13 @@ struct AIChatView: View {
                             ProgressView()
                                 .progressViewStyle(.circular)
                                 .padding()
-                                .background(.gray.opacity(0.2))
-                                .cornerRadius(16)
+                                .background(.gray.opacity(0.2), in: .rect(cornerRadius: 16))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                     .padding()
                 }
+                .scrollDismissesKeyboard(.interactively)
                 .onChange(of: viewModel.messages) { _, messages in
                     if let lastMessage = messages.last {
                         withAnimation {
@@ -54,15 +53,25 @@ struct AIChatView: View {
                     }
                 }
             }
-
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             InputView(viewModel: viewModel)
+                .background(.bar)
         }
         .navigationTitle("AI Chat")
     }
 }
 
 #Preview {
-    NavigationView {
-        AIChatView()
+    NavigationStack {
+        AIChatView(aiService: PreviewAIService())
     }
 }
+#if DEBUG
+private struct PreviewAIService: AIServiceProtocol {
+    func sendChatMessage(_ message: String, model: AIModel) async throws -> String {
+        "Respuesta de prueba para: \(message)"
+    }
+}
+#endif
+

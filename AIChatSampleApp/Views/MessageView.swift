@@ -14,9 +14,8 @@ struct MessageView: View {
         HStack {
             Text(message.content)
                 .padding()
-                .background(message.isUser ? Color.blue : .gray.opacity(0.2))
-                .foregroundStyle(message.isUser ? Color.white : .primary)
-                .cornerRadius(16)
+                .background(message.isUser ? .blue : .gray.opacity(0.2), in: .rect(cornerRadius: 16))
+                .foregroundStyle(message.isUser ? .white : .primary)
                 .frame(maxWidth: .infinity, alignment: message.isUser ? .trailing : .leading)
         }
     }

@@ -8,27 +8,36 @@
 import SwiftUI
 
 struct InputView: View {
-    @ObservedObject var viewModel: AIChatViewModel
+    @Bindable var viewModel: AIChatViewModel
+    @State private var sendTrigger: UUID?
 
     var body: some View {
-        Divider()
+        VStack(spacing: 0) {
+            Divider()
 
-        HStack {
-            TextField("Message...", text: $viewModel.inputMessage)
-                .textFieldStyle(.roundedBorder)
-                .disabled(viewModel.isLoading)
+            HStack {
+                TextField("Message...", text: $viewModel.inputMessage)
+                    .textFieldStyle(.roundedBorder)
+                    .disabled(viewModel.isLoading)
+                    .submitLabel(.send)
+                    .onSubmit {
+                        sendTrigger = UUID()
+                    }
 
-            Button(action: {
-                Task {
-                    await viewModel.sendMessage()
+                Button(action: {
+                    sendTrigger = UUID()
+                }) {
+                    Image(systemName: "arrow.up.circle.fill")
+                        .font(.system(size: 24))
+                        .symbolEffect(.bounce, value: viewModel.isLoading)
                 }
-            }) {
-                Image(systemName: "arrow.up.circle.fill")
-                    .font(.system(size: 24))
-                    .symbolEffect(.bounce, value: viewModel.isLoading)
+                .disabled(viewModel.inputMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
             }
-            .disabled(viewModel.inputMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
+            .padding()
         }
-        .padding()
+        .task(id: sendTrigger) {
+            guard sendTrigger != nil else { return }
+            await viewModel.sendMessage()
+        }
     }
 }
