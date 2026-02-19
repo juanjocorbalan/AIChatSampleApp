@@ -20,8 +20,8 @@ struct AIModel: Identifiable, Hashable {
     }
 
     static let availableModels: [AIModel] = [
-        AIModel(id: "meta-llama/llama-4-maverick:free", name: "Llama 4 Maverick"),
-        AIModel(id: "mistralai/devstral-small:free", name: "Mistral DevStral Small"),
-        AIModel(id: "deepseek/deepseek-chat:free", name: "DeepSeek V3"),
+        AIModel(id: "meta-llama/llama-4-maverick", name: "Llama 4 Maverick"),
+        AIModel(id: "nvidia/nemotron-nano-9b-v2:free", name: "Nemotron Nano"),
+        AIModel(id: "google/gemma-3-27b-it:free", name: "Gemma 3"),
     ]
 }
